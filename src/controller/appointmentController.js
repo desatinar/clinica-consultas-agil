@@ -4,13 +4,11 @@ import { isDateGraterThanToday, isTimeAndDateAvailables, validateDate, validateT
 
 export async function scheduleAppointment() {
         const database = readDatabase();
-        const users = database.users.map((user, index) => {
-            return {...user, id: (index + 1).toString()};
-        });
+        const users = database.users;
 
         console.log("\nDigite o número do paciente para marcação\n");
         for (const user of users) {
-            console.log(`${user.id}. ${user.name}\nContato: ${user.phone}`);
+            console.log(`Número do paciente: ${user.id}\nNome: ${user.name}\nContato: ${user.phone}`);
             console.log("-".repeat(25));
         }
 

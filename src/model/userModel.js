@@ -1,8 +1,9 @@
 import { readDatabase, saveDatabase } from "./databaseModel.js";
 
 export function registerPatient(user){
-    const newUser = {...user, appointment: {date: null, time: null, specialty: null}};
     const data = readDatabase();
+    const userId = (data.users.length + 1).toString();
+    const newUser = {...user, id: userId, appointment: {date: null, time: null, specialty: null}};
     data.users.push(newUser);
 
     saveDatabase(data);
