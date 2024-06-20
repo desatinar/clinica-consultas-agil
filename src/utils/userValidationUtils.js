@@ -12,3 +12,7 @@ export function checkUsersExist(){
     const users = database.users;
     return users.length > 0;
 }
+
+export function isPhoneNumberValid(phone){
+    return !isNaN(phone);
+}
