@@ -12,7 +12,7 @@ export async function scheduleAppointment() {
         console.log("-".repeat(25));
     }
 
-    const opt = await input({ message: "Opção:" });
+    const opt = await input({ message: "Número do paciente:" });
 
     if (!validateUserId(opt)) {
         console.log("\nPaciente não encontrado.\n");
@@ -89,8 +89,7 @@ export async function cancelAppointment() {
         }
     }
 
-    console.log("Digite o número do consulta");
-    const appointmentCancellationId = await input({ message: "Opção:" });
+    const appointmentCancellationId = await input({ message: "Número da consulta:" });
 
     if (!validateAppointmentId(appointmentCancellationId)) {
         console.log("\nConsulta não encontrada\n");
@@ -114,6 +113,7 @@ export async function cancelAppointment() {
 
     switch (cancelOption) {
         case "1":
+            //amanhã ajeitar. falta pesquisar por usuário que tenha essa consulta
             const activeAppointments = appointments.filter(appointment => appointment.id !== appointmentToCancel.id);
             const updatedAppointmentCancellationDetails = {
                 ...userToCancelAppointment,
