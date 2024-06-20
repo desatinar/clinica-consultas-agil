@@ -5,7 +5,7 @@ export function readUserDatabase(){
         const database = fs.readFileSync("users.json", "utf8");
         return JSON.parse(database);
     } catch(err){
-        console.log("Erro ao ler a database", err);
+        console.log("Erro ao ler a database de usuários", err);
     }
 }
 
