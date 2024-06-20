@@ -10,7 +10,7 @@ Este exercício representa uma fase do processo seletivo da Aceleradora Ágil. C
 
 **Cancelamento de consultas:** Permite cancelar consultas anteriormente agendadas.
 
-**Armazenamento:** A simulação do 'banco de dados' foi feita utilizando um arquivo JSON.
+**Armazenamento:** A simulação do 'banco de dados' foi feita utilizando arquivos JSON.
 
 ### Implementação
 O sistema foi desenvolvido utilizando [Node.js](https://nodejs.org/en) e a biblioteca [Inquirer](https://github.com/SBoudrias/Inquirer.js) para a criação de uma interface de linha de comando interativa.
