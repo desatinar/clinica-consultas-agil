@@ -1,3 +1,24 @@
 {
-  "users": []
+  "users": [
+    {
+      "name": "rodrigo",
+      "phone": "8189902",
+      "id": "1",
+      "appointment": {
+        "date": "25/10/2024",
+        "time": "11:00",
+        "specialty": "outros"
+      }
+    },
+    {
+      "name": "diego",
+      "phone": "18145",
+      "id": "2",
+      "appointment": {
+        "date": null,
+        "time": null,
+        "specialty": null
+      }
+    }
+  ]
 }

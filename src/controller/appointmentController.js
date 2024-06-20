@@ -19,6 +19,9 @@ export async function scheduleAppointment() {
             return;
         }
 
+        const user = users.find(user => user.id === opt);
+        console.log(user);
+
         const appointmentDate = await input({ message: "Qual a data você deseja marcar? Formato aceito: DD/MM/AAAA" });
 
         if(!validateDate(appointmentDate)){
@@ -47,7 +50,7 @@ export async function scheduleAppointment() {
         
         const userIndex = (opt - 1).toString();
         const newUserInfo = {
-            ...validUser, appointment: {
+            ...user, appointment: {
                 date: appointmentDate,
                 time: appointmentTime,
                 specialty: appointmentSpecialty,
