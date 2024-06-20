@@ -37,12 +37,16 @@ export function validateTime(time){
 
 export function isTimeAndDateAvailables(time, date){
     const database = readDatabase();
+    const users = database.users;
 
-    const usersAppointments = database.users.filter((user) => {
-        return user.appointment.time === time && user.appointment.date === date;
-    })
+    let result = []
+    for(const user of users){
+        for(const appointment of user.appointments){
+            if(appointment.time === time && appointment.date === date){
+                result.push(user);
+            }
+        }
+    }
 
-    const result = usersAppointments.length === 0 ? true : false;
-
-    return result;
+    return result.length === 0 ? true : false;
 }

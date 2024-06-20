@@ -20,7 +20,6 @@ export async function scheduleAppointment() {
         }
 
         const user = users.find(user => user.id === opt);
-        console.log(user);
 
         const appointmentDate = await input({ message: "Qual a data você deseja marcar? Formato aceito: DD/MM/AAAA" });
 
@@ -47,14 +46,20 @@ export async function scheduleAppointment() {
         }
 
         const appointmentSpecialty = await input({ message: "Qual especialidade médica" });
-        
+    
         const userIndex = (opt - 1).toString();
+        const validAppointments = user.appointments.filter(appointment => appointment.time !== null);
+
         const newUserInfo = {
-            ...user, appointment: {
-                date: appointmentDate,
-                time: appointmentTime,
-                specialty: appointmentSpecialty,
-            }
+            ...user,
+            appointments: [
+                ...validAppointments,
+                {
+                    date: appointmentDate,
+                    time: appointmentTime,
+                    specialty: appointmentSpecialty,
+                }
+            ] 
         };
         
         database.users.splice(userIndex, 1, newUserInfo);
