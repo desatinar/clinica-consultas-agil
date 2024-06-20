@@ -1,6 +1,7 @@
 import { input } from '@inquirer/prompts';
 import { readUserDatabase, saveUserDatabase } from "../model/userDatabaseModel.js";
-import { isDateGraterThanToday, isTimeAndDateAvailables, validateDate, validateTime, validateUserId, validateAppointmentId } from '../utils/validationUtils.js';
+import { validateUserId } from '../utils/userValidationUtils.js';
+import { isDateGraterThanToday, isTimeAndDateAvailables, validateAppointmentId, validateDate, validateTime } from '../utils/appointmentValidationUtils.js';
 
 export async function scheduleAppointment() {
     const database = readUserDatabase();

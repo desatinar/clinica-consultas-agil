@@ -1,14 +1,3 @@
-import { readUserDatabase } from "../model/userDatabaseModel.js";
-
-export function validateUserId(userId){
-    const database = readUserDatabase();
-    const user = database.users.find(user => user.id === userId);
-
-    const result = user ? true : false;
-
-    return result;
-}
-
 export function validateDate(date){
     const datePattern = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/](19|20)\d\d$/
     const isDateValid = datePattern.test(date);
