@@ -39,14 +39,30 @@ export function isTimeAndDateAvailables(time, date){
     const database = readDatabase();
     const users = database.users;
 
-    let result = []
+    let result = true;
     for(const user of users){
         for(const appointment of user.appointments){
             if(appointment.time === time && appointment.date === date){
-                result.push(user);
+                result = false;
             }
         }
     }
 
-    return result.length === 0 ? true : false;
+    return result;
+}
+
+export function validateAppointmentId(id){
+    const database = readDatabase();
+    const users = database.users;
+
+    let result = false;
+    for(const user of users){
+        for(const appointment of user.appointments){
+            if(appointment.id === id){
+                result = true;
+            }
+        }
+    }
+
+    return result;
 }
