@@ -1,11 +1,18 @@
 import { input } from '@inquirer/prompts';
 import { readUserDatabase, saveUserDatabase } from "../model/userDatabaseModel.js";
-import { validateUserId } from '../utils/userValidationUtils.js';
-import { isDateGraterThanToday, isTimeAndDateAvailables, validateAppointmentId, validateDate, validateTime } from '../utils/appointmentValidationUtils.js';
+import { checkUsersExist, validateUserId } from '../utils/userValidationUtils.js';
+import { checkAppointmentsExist, isDateGraterThanToday, isTimeAndDateAvailables, validateAppointmentId, validateDate, validateTime } from '../utils/appointmentValidationUtils.js';
+import { createAppointment } from '../model/appointmentModel.js';
+import { readAppointmentDatabase, saveAppointmentDatabase } from '../model/appointmentDatabaseModel.js';
 
 export async function scheduleAppointment() {
-    const database = readUserDatabase();
-    const users = database.users;
+    const usersDatabase = readUserDatabase();
+    const users = usersDatabase.users;
+
+    if(!checkUsersExist()){
+        console.log("\nSem pacientes cadastrados. Cadastre um antes de marcar uma consulta\n");
+        return;
+    }
 
     console.log("\nDigite o número do paciente para marcação\n");
     for (const user of users) {
@@ -13,14 +20,12 @@ export async function scheduleAppointment() {
         console.log("-".repeat(25));
     }
 
-    const opt = await input({ message: "Número do paciente:" });
+    const userId = await input({ message: "Número do paciente:" });
 
-    if (!validateUserId(opt)) {
+    if (!validateUserId(userId)) {
         console.log("\nPaciente não encontrado.\n");
         return;
     }
-
-    const user = users.find(user => user.id === opt);
 
     const appointmentDate = await input({ message: "Qual a data você deseja marcar? Formato aceito: DD/MM/AAAA" });
 
@@ -48,49 +53,33 @@ export async function scheduleAppointment() {
 
     const appointmentSpecialty = await input({ message: "Qual especialidade médica" });
 
-    const userIndex = (opt - 1).toString();
-    const validAppointments = user.appointments.filter(appointment => appointment.time !== null);
-    const appointmentId = Math.floor(Math.random() * 1000);
-
-    const newUserInfo = {
-        ...user,
-        appointments: [
-            ...validAppointments,
-            {
-                id: appointmentId.toString(),
-                date: appointmentDate,
-                time: appointmentTime,
-                specialty: appointmentSpecialty,
-            }
-        ]
+    const newAppointment = {
+        date: appointmentDate,
+        time: appointmentTime,
+        specialty: appointmentSpecialty,
+        userId,
     };
 
-    database.users.splice(userIndex, 1, newUserInfo);
-    saveUserDatabase(database);
-
+    createAppointment(newAppointment);
     console.log("\nConsulta Marcada\n");
 }
 
 export async function cancelAppointment() {
-    const database = readUserDatabase();
-    const users = database.users;
-    let userToCancelAppointment = {};
-    let appointments = [];
+    const appointmentsDatabase = readAppointmentDatabase();
+    const appointments = appointmentsDatabase.appointments;
+    const usersDatabase = readUserDatabase();
+    const users = usersDatabase.users;
 
-    console.log("\nConsultas agendadas: ");
-    for (const user of users) {
-        for (const appointment of user.appointments) {
-            if (appointment.date !== null) {
-                userToCancelAppointment = { ...user };
-                appointments.push(appointment);
-                console.log(`Nome do paciente: ${user.name}`);
-                console.log(`Especialidade marcada: ${appointment.specialty}`);
-                console.log(`Número da consulta: ${appointment.id}\n`);
-            }
-        }
+    if(!checkAppointmentsExist()){
+        console.log("\nSem consultas cadastradas. Cadastre uma antes.\n");
+        return;
     }
 
-    const appointmentCancellationId = await input({ message: "Número da consulta:" });
+    console.log("\nConsultas agendadas: ");
+    appointments.forEach(appointment => console.log(`Número da consulta: ${appointment.id}`));
+
+    console.log("");
+    const appointmentCancellationId = await input({ message: "Número da consulta:"});
 
     if (!validateAppointmentId(appointmentCancellationId)) {
         console.log("\nConsulta não encontrada\n");
@@ -98,39 +87,34 @@ export async function cancelAppointment() {
     }
 
     const appointmentToCancel = appointments.find(appointment => appointment.id === appointmentCancellationId);
+    const cancelledAppointmentUser = users.find(user => appointmentToCancel.userId === user.id);
 
     console.log("\nDetalhes da consulta: ");
-    console.log(`\nNúmero do paciente: ${userToCancelAppointment.id}`);
-    console.log(`Nome do paciente: ${userToCancelAppointment.name}`);
-    console.log(`Telefone do paciente: ${userToCancelAppointment.phone}`);
+    console.log(`\nNúmero do paciente: ${cancelledAppointmentUser.id}`);
+    console.log(`Nome do paciente: ${cancelledAppointmentUser.name}`);
+    console.log(`Telefone do paciente: ${cancelledAppointmentUser.phone}`);
     console.log(`Especialidade marcada: ${appointmentToCancel.specialty}`);
     console.log(`Data marcada: ${appointmentToCancel.date}`);
     console.log(`Hora marcada: ${appointmentToCancel.time}`);
     console.log(`Número da consulta: ${appointmentToCancel.id}`);
-
     console.log("\nConfirma o concelamento?\nDigite 1 para sim\nDigite 2 para não");
 
     const cancelOption = await input({ message: "Opção:" });
 
     switch (cancelOption) {
         case "1":
-            //amanhã ajeitar. falta pesquisar por usuário que tenha essa consulta
-            const activeAppointments = appointments.filter(appointment => appointment.id !== appointmentToCancel.id);
-            const updatedAppointmentCancellationDetails = {
-                ...userToCancelAppointment,
-                appointments: activeAppointments,
-            };
-            const userIndex = Number(userToCancelAppointment.id) - 1.
-            database.users.splice(userIndex, 1, updatedAppointmentCancellationDetails);
-            saveUserDatabase(database);
-            console.log("\nConsulta desmarcada\n");
+            const updatedAppointments = appointments.filter(appointment => appointment.id !== appointmentCancellationId);
+            const updatedDatabase = {
+                appointments: updatedAppointments
+            }
+            saveAppointmentDatabase(updatedDatabase);
+            console.log("\nConsulta desmarcada!\n");
             break;
         case "2":
-            console.log("\nDesmarcação de consulta cancelada");
+            console.log("\nDesmarcação de consulta cancelada\n");
             return;
         default:
-            console.log("\nOpção inválida");
+            console.log("\nOpção inválida\n");
             return;
     }
-
 }

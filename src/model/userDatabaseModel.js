@@ -13,6 +13,6 @@ export function saveUserDatabase(data){
     try {
         fs.writeFileSync("users.json", JSON.stringify(data, null, 2), "utf8");
     } catch (err) {
-        console.log("Erro ao salvar no database", err);
+        console.log("Erro ao salvar no database de usuários", err);
     }
 }

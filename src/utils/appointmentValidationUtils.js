@@ -1,7 +1,9 @@
+import { readAppointmentDatabase } from "../model/appointmentDatabaseModel.js";
+
 export function validateDate(date){
     const datePattern = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/](19|20)\d\d$/
-    const isDateValid = datePattern.test(date);
 
+    const isDateValid = datePattern.test(date);
     return isDateValid;
 }
 
@@ -13,45 +15,34 @@ export function isDateGraterThanToday(date){
     today.setUTCHours(0, 0, 0, 0);
 
     const result = appointmentDate >= today;
-
     return result;
 }
 
 export function validateTime(time){
     const timePattern = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-    const isTimeValid = timePattern.test(time);
 
+    const isTimeValid = timePattern.test(time);
     return isTimeValid;
 }
 
 export function isTimeAndDateAvailables(time, date){
-    const database = readUserDatabase();
-    const users = database.users;
+    const database = readAppointmentDatabase();
+    const appointments = database.appointments;
 
-    let result = true;
-    for(const user of users){
-        for(const appointment of user.appointments){
-            if(appointment.time === time && appointment.date === date){
-                result = false;
-            }
-        }
-    }
-
-    return result;
+    const isAvailable = appointments.filter(appointment => appointment.date === date && appointment.time === time);
+    return !isAvailable.length > 0;
 }
 
 export function validateAppointmentId(id){
-    const database = readUserDatabase();
-    const users = database.users;
+    const database = readAppointmentDatabase();
+    const appointments = database.appointments;
 
-    let result = false;
-    for(const user of users){
-        for(const appointment of user.appointments){
-            if(appointment.id === id){
-                result = true;
-            }
-        }
-    }
+    const appointmentExists = appointments.find(appointment => appointment.id === id);
+    return appointmentExists ? true : false;
+}
 
-    return result;
+export function checkAppointmentsExist(){
+    const database = readAppointmentDatabase();
+    const appointments = database.appointments;
+    return appointments.length > 0;
 }
