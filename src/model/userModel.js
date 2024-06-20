@@ -1,29 +1,20 @@
-import { readDatabase, saveDatabase } from "./databaseModel.js";
+import { readUserDatabase, saveUserDatabase } from "./userDatabaseModel.js";
 
 export function registerPatient(user) {
-    const data = readDatabase();
-    const userId = (data.users.length + 1).toString();
-    const appointmentId = Math.floor(Math.random() * 1000);
+    const userDatabase = readUserDatabase();
+    const userId = (userDatabase.users.length + 1).toString();
 
     const newUser = {
         ...user, 
-        id: userId, 
-        appointments: [
-            {
-                id: appointmentId.toString(),
-                date: null, 
-                time: null, 
-                specialty: null
-            }
-        ],
+        id: userId
     }
 
-    data.users.push(newUser);
-    saveDatabase(data);
+    userDatabase.users.push(newUser);
+    saveUserDatabase(userDatabase);
 }
 
 export function isPatientRegistered(phone) {
-    const database = readDatabase();
+    const database = readUserDatabase();
     const duplicatePhoneCheck = database.users.find(user => user.phone === phone);
 
     if (duplicatePhoneCheck) {

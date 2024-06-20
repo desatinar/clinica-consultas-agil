@@ -1,6 +1,6 @@
 import * as fs from "fs";
 
-export function readDatabase(){
+export function readUserDatabase(){
     try{
         const database = fs.readFileSync("users.json", "utf8");
         return JSON.parse(database);
@@ -9,7 +9,7 @@ export function readDatabase(){
     }
 }
 
-export function saveDatabase(data){
+export function saveUserDatabase(data){
     try {
         fs.writeFileSync("users.json", JSON.stringify(data, null, 2), "utf8");
     } catch (err) {

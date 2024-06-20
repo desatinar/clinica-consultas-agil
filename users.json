@@ -1,30 +1,4 @@
 {
   "users": [
-    {
-      "name": "rodrigo",
-      "phone": "81908070",
-      "id": "1",
-      "appointments": [
-        {
-          "id": "394",
-          "date": "25/10/2024",
-          "time": "10:00",
-          "specialty": "clinico"
-        }
-      ]
-    },
-    {
-      "name": "diego",
-      "phone": "817090",
-      "id": "2",
-      "appointments": [
-        {
-          "id": "394",
-          "date": "25/10/2024",
-          "time": "10:00",
-          "specialty": "clinico"
-        }
-      ]
-    }
   ]
 }

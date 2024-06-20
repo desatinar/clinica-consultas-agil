@@ -1,7 +1,7 @@
-import { readDatabase } from "../model/databaseModel.js";
+import { readUserDatabase } from "../model/userDatabaseModel.js";
 
 export function validateUserId(userId){
-    const database = readDatabase();
+    const database = readUserDatabase();
     const user = database.users.find(user => user.id === userId);
 
     const result = user ? true : false;
@@ -36,7 +36,7 @@ export function validateTime(time){
 }
 
 export function isTimeAndDateAvailables(time, date){
-    const database = readDatabase();
+    const database = readUserDatabase();
     const users = database.users;
 
     let result = true;
@@ -52,7 +52,7 @@ export function isTimeAndDateAvailables(time, date){
 }
 
 export function validateAppointmentId(id){
-    const database = readDatabase();
+    const database = readUserDatabase();
     const users = database.users;
 
     let result = false;

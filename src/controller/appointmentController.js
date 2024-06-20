@@ -1,9 +1,9 @@
 import { input } from '@inquirer/prompts';
-import { readDatabase, saveDatabase } from "../model/databaseModel.js";
+import { readUserDatabase, saveUserDatabase } from "../model/userDatabaseModel.js";
 import { isDateGraterThanToday, isTimeAndDateAvailables, validateDate, validateTime, validateUserId, validateAppointmentId } from '../utils/validationUtils.js';
 
 export async function scheduleAppointment() {
-    const database = readDatabase();
+    const database = readUserDatabase();
     const users = database.users;
 
     console.log("\nDigite o número do paciente para marcação\n");
@@ -65,13 +65,13 @@ export async function scheduleAppointment() {
     };
 
     database.users.splice(userIndex, 1, newUserInfo);
-    saveDatabase(database);
+    saveUserDatabase(database);
 
     console.log("\nConsulta Marcada\n");
 }
 
 export async function cancelAppointment() {
-    const database = readDatabase();
+    const database = readUserDatabase();
     const users = database.users;
     let userToCancelAppointment = {};
     let appointments = [];
@@ -121,7 +121,7 @@ export async function cancelAppointment() {
             };
             const userIndex = Number(userToCancelAppointment.id) - 1.
             database.users.splice(userIndex, 1, updatedAppointmentCancellationDetails);
-            saveDatabase(database);
+            saveUserDatabase(database);
             console.log("\nConsulta desmarcada\n");
             break;
         case "2":
