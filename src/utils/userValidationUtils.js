@@ -16,3 +16,14 @@ export function checkUsersExist(){
 export function isPhoneNumberValid(phone){
     return !isNaN(phone);
 }
+
+export function isPatientRegistered(phone) {
+    const database = readUserDatabase();
+    const duplicatePhoneCheck = database.users.find(user => user.phone === phone);
+
+    if (duplicatePhoneCheck) {
+        return true;
+    } else {
+        return false;
+    }
+}

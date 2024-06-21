@@ -1,5 +1,5 @@
 import { input } from '@inquirer/prompts';
-import { readUserDatabase, saveUserDatabase } from "../model/userDatabaseModel.js";
+import { readUserDatabase } from "../model/userDatabaseModel.js";
 import { checkUsersExist, validateUserId } from '../utils/userValidationUtils.js';
 import { checkAppointmentsExist, isDateGraterThanToday, isTimeAndDateAvailables, validateAppointmentId, validateDate, validateTime } from '../utils/appointmentValidationUtils.js';
 import { createAppointment } from '../model/appointmentModel.js';

@@ -1,6 +1,6 @@
 import { input } from '@inquirer/prompts';
-import { isPatientRegistered, registerPatient } from '../model/userModel.js';
-import { isPhoneNumberValid } from '../utils/userValidationUtils.js';
+import { registerPatient } from '../model/userModel.js';
+import { isPhoneNumberValid, isPatientRegistered } from '../utils/userValidationUtils.js';
 
 export async function createPatient(){
     const user = {
